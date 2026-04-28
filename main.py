@@ -1,12 +1,12 @@
 import time
 
-from config import CHECK_INTERVAL, GATEWAY_IP, PING_TARGET
+from config import CHECK_INTERVAL, PING_TARGET
 from monitor import get_system_stats, print_stats
 from logger_util import log_stats
 from alerts import check_thresholds
 #from simulator import cpu_stress_test
 from network_alerts import check_network_alerts
-from network_monitor import get_network_stats
+from network_monitor import get_network_stats, get_default_gateway
 
 def run_system_monitor() -> None:
     """Run CPU, memory and disk monitoring."""
@@ -37,7 +37,16 @@ def run_network_monitor() -> None:
 
     try:
         while True:
-            network_stats = get_network_stats(GATEWAY_IP, PING_TARGET)
+            gateway_ip = get_default_gateway()
+#            print(f"DEBUG gateway_ip = {gateway_ip}")
+
+            if gateway_ip is None:
+                print("Could not detect default gateway.")
+                return
+
+            print(f"Detected default gateway: {gateway_ip}")
+
+            network_stats = get_network_stats(gateway_ip, PING_TARGET)
 
             print(
                 f"[NETWORK] "
@@ -75,7 +84,15 @@ def run_combined_monitor() -> None:
     try:
         while True:
             stats = get_system_stats()
-            network_stats = get_network_stats(GATEWAY_IP, PING_TARGET)
+            gateway_ip = get_default_gateway()
+
+            if gateway_ip is None:
+                print("Could not detect default gateway.")
+                return
+
+            print(f"Detected default gateway: {gateway_ip}")
+
+            network_stats = get_network_stats(gateway_ip, PING_TARGET)
 
             print_stats(stats)
 

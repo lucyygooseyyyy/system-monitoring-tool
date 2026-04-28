@@ -1,6 +1,5 @@
 import os
 
-GATEWAY_IP = '192.168.12.1'
 PING_TARGET = '8.8.8.8'
 
 LATENCY_WARNING_MS = 100
