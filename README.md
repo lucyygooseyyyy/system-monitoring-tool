@@ -1,4 +1,4 @@
-﻿# System Monitoring Tool
+# System Monitoring Tool
 
 A Python tool for monitoring system performance and basic network connectivity.
 
